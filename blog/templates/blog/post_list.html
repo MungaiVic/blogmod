@@ -1,0 +1,11 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+<h1>All Blogs</h1>
+{{blogpost.title}}
+{% if blogpost_list %}
+{% for blog in blogpost_list %}
+<li><a href="{% url 'blog-detail' blog.pk %}">{{blog.title}}</a> ({{blog.post_date}}) - <a href="{% url 'blogger-detail' blog.author.pk %}">{{blog.author.pseudonym}}</a></li>
+{% endfor %}
+{% endif %}
+
+{% endblock content %}
