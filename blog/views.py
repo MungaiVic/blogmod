@@ -36,9 +36,6 @@ def upgrade_status(request):
     form = UpgradeToBloggerForm(instance=request.user)
     if request.method == "POST":
         form = UpgradeToBloggerForm(request.POST, instance=request.user)
-        # def form_valid(self,form,*kwargs):
-        #     form.instance.author = self.request.user
-        #     return super(upgrade_status, self).form_valid(form)
         if form.is_valid():
             user = form.save()
             group = Group.objects.get(name="bloggers")

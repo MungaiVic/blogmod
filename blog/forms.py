@@ -29,8 +29,4 @@ class UpgradeToBloggerForm(UserChangeForm):
       user.username = self.cleaned_data['username']
       if commit:
          user.save()
-         group = Group.objects.get(name="bloggers")
-         group2 = Group.objects.get(name="viewers")
-         user.groups.add(group)
-         user.groups.add(group2)
       return user
