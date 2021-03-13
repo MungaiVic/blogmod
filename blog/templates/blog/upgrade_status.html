@@ -1,0 +1,26 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+<style>
+    .form-style{
+        padding-left: 20px;
+        border-style: outset;
+        border-radius: 5px;
+        padding: 15px;
+    }
+</style>
+
+<h3>Upgrade Status</h3>
+<p>To be able to post blogs, you need to be activated as a blogger. Kindly confirm this is the course of action you wish to take.</p>
+<div class="form-style">
+
+    <form action="" method="POST">
+    {% csrf_token %}
+    <h5> Enter the username you wish to have on display</h5>
+    {{form}}
+    <br><br>
+    <p>I confirm that I want to become a blogger.</p>
+    <input class="btn btn-primary" type="submit" value="Confirm">
+    </form>
+</div>
+
+{% endblock content %}

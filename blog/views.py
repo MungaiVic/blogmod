@@ -2,12 +2,13 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import *
-from .forms import NewUserForm
+from .forms import NewUserForm, UpgradeToBloggerForm
 from django.contrib import messages
 
 from django.contrib.auth import login
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required
+from django import template
 # Create your views here.
 def index(request):
     blogs = Post.objects.all()
@@ -30,6 +31,26 @@ def sign_up(request):
     form = NewUserForm()
     context = {'form':form}
     return render(request, template_name='register.html', context=context)
+
+def upgrade_status(request):
+    form = UpgradeToBloggerForm(instance=request.user)
+    if request.method == "POST":
+        form = UpgradeToBloggerForm(request.POST, instance=request.user)
+        # def form_valid(self,form,*kwargs):
+        #     form.instance.author = self.request.user
+        #     return super(upgrade_status, self).form_valid(form)
+        if form.is_valid():
+            user = form.save()
+            group = Group.objects.get(name="bloggers")
+            user.groups.add(group)
+            group2 = Group.objects.get(name="viewers")
+            user.groups.add(group2)
+            messages.success(request, "User successfully upgraded.")
+            return redirect('create-blog')
+        messages.error(request, "Unsuccessful upgrade. Something went wrong.")
+    form = UpgradeToBloggerForm(instance = request.user)
+    context = {'form':form}
+    return render(request, template_name='blog/upgrade_status.html', context=context)
 
 
 class BlogDetailView(generic.DetailView):
@@ -71,6 +92,7 @@ class CommentCreateView(generic.CreateView):
 class BloggerListView(generic.ListView):
     model = Post
     paginate_by = 10
+
 
 class BlogCreateView(generic.CreateView):
     model = Post
