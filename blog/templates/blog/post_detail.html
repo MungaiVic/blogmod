@@ -2,9 +2,9 @@
 {% block content %}
 <h1>{{post.title}}</h1>
 <h6>{{post.date_posted}}</h6>
-{% comment %} <h6><a href="">{{blogpost.author.pseudonym}}</a></h6> {% endcomment %}
+<h6><a href="">{{post.user}}</a></h6>
 <hr>
-<p>{{post.content}}</p>
+<p>{{post.body}}</p>
 
 <div style="margin-top: 20px; margin-left: 20px;">
     <h4>Comments</h4>

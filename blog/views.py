@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required
-from django import template
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # Create your views here.
 def index(request):
     blogs = Post.objects.all()
@@ -32,6 +32,7 @@ def sign_up(request):
     context = {'form':form}
     return render(request, template_name='register.html', context=context)
 
+@login_required()
 def upgrade_status(request):
     form = UpgradeToBloggerForm(instance=request.user)
     if request.method == "POST":
@@ -41,7 +42,7 @@ def upgrade_status(request):
             group = Group.objects.get(name="bloggers")
             user.groups.add(group)
             group2 = Group.objects.get(name="viewers")
-            user.groups.add(group2)
+            user.groups.remove(group2)
             messages.success(request, "User successfully upgraded.")
             return redirect('create-blog')
         messages.error(request, "Unsuccessful upgrade. Something went wrong.")
@@ -62,7 +63,7 @@ class BlogDetailView(generic.DetailView):
     def form_valid(self, form, **kwargs):
         pass
 
-class CommentCreateView(generic.CreateView):
+class CommentCreateView(LoginRequiredMixin,generic.CreateView):
     model = Comment
     fields = ['body']
     success_url = reverse_lazy('blog-detail')
@@ -91,11 +92,19 @@ class BloggerListView(generic.ListView):
     paginate_by = 10
 
 
-class BlogCreateView(generic.CreateView):
+class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, generic.CreateView):
     model = Post
     fields = ['title', 'summary', 'body','genre', 'status']
     success_url = reverse_lazy('home') #TODO: May want to create a page where a blogger can view their blog posts
     #? Future idea: Add analytics to the dashboard of the blogger.
+
+    def test_func(self):
+        """this method checks is the user trying to access this page is a blogger. That is, if they exist in the 'bloggers' group"""
+        return self.request.user.groups.filter(name = 'bloggers').exists()
+
+    def handle_no_permission(self):
+        """This method redirects users to the upgrade-status page so that they can be upgraded to bloggers"""
+        return redirect('upgrade-status')
 
     def form_valid(self, form, *kwargs):
         """Add other details such as author"""
