@@ -1,15 +1,45 @@
 {% extends 'base_generic.html' %}
 {% block content %}
-
+<style>
+    .form-style{
+        padding-left: 20px;
+        border-style: outset;
+        border-radius: 5px;
+        padding: 15px;
+    }
+</style>
 
 <!--Register-->
-<div class="container">
+<div class="form-style">
 	<h1>Register</h1>
 	<form method="POST">
 		{% csrf_token %}
-		{{form}}
+		<table>
+			<tr>
+				<td>{{form.first_name.label_tag}}</td>
+				<td>{{form.first_name}}</td>
+			</tr>
+			<tr>
+				<td>{{form.last_name.label_tag}}</td>
+				<td>{{form.last_name}}</td>
+			</tr>
+			<tr>
+				<td>{{form.email.label_tag}}</td>
+				<td>{{form.email}}</td>
+			</tr>
+			<tr>
+				<td>{{form.password1.label_tag}}</td>
+				<td>{{form.password1}}</td>
+			</tr>
+			<tr>
+				<td>{{form.password2.label_tag}}</td>
+				<td>{{form.password2}}</td>
+			</tr>
+		</table>
+		{% comment %} {{form}} {% endcomment %}
 		<button class="btn btn-primary" type="submit">Register</button>
 	</form>
-	<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+	<br>
+	<p>If you already have an account, <a href="/login">login</a> instead.</p>
 </div>
 {% endblock content %}
