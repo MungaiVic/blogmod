@@ -27,6 +27,7 @@ class UpgradeToBloggerForm(UserChangeForm):
    def save(self, commit=True):
       user = super(UpgradeToBloggerForm, self).save(commit=False)
       user.username = self.cleaned_data['username']
+      # user.bio = self.cleaned_data['bio']
       if commit:
          user.save()
       return user

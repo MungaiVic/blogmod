@@ -1,0 +1,9 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+<h3>Bloggers</h3>
+    {% for bloggers in users %}
+        <ul>
+            <li>{{bloggers}}</li>
+        </ul>
+    {% endfor %}
+{% endblock content %}

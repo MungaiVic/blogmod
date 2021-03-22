@@ -1,11 +1,11 @@
 from django.urls import reverse_lazy, reverse
-from django.views import generic
+from django.views.generic import ListView,CreateView,DetailView
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import *
 from .forms import NewUserForm, UpgradeToBloggerForm
 from django.contrib import messages
 
-from django.contrib.auth import login
+from django.contrib.auth import login, get_user_model
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -51,7 +51,7 @@ def upgrade_status(request):
     return render(request, template_name='blog/upgrade_status.html', context=context)
 
 
-class BlogDetailView(generic.DetailView):
+class BlogDetailView(DetailView):
     model = Post
     paginate_by = 10
 
@@ -63,7 +63,7 @@ class BlogDetailView(generic.DetailView):
     def form_valid(self, form, **kwargs):
         pass
 
-class CommentCreateView(LoginRequiredMixin,generic.CreateView):
+class CommentCreateView(LoginRequiredMixin,CreateView):
     model = Comment
     fields = ['body']
     success_url = reverse_lazy('blog-detail')
@@ -87,12 +87,23 @@ class CommentCreateView(LoginRequiredMixin,generic.CreateView):
     def get_success_url(self, **kwargs):
         return reverse('blog-detail',kwargs={'pk':self.kwargs['pk']})
 
-class BloggerListView(generic.ListView):
-    model = Post
-    paginate_by = 10
+
+#TODO: Need to implement a list of bloggers
+def blogger_list(request):
+    ourUser = get_user_model()
+    users = ourUser.objects.filter(groups__name='bloggers')
+    context = {'users':users}
+    return render(request, template_name='blog/user_list.html', context=context)
 
 
-class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, generic.CreateView):
+#TODO: Need to implement a list of every blogger's blogpost in MyblogListView
+#? Potential place to start placing analytics dashboard too
+def blogger_detail(request, pk):
+    # Here, I will pass the details of the blogger, all his/her blogposts. In the future, place some analytics
+    pass
+
+
+class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
     fields = ['title', 'summary', 'body','genre', 'status']
     success_url = reverse_lazy('home') #TODO: May want to create a page where a blogger can view their blog posts
@@ -111,3 +122,6 @@ class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, generic.CreateView
         # Add the author of the blog post to the form
         form.instance.author = self.request.user
         return super(BlogCreateView, self).form_valid(form)
+
+
+
