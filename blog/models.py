@@ -1,10 +1,58 @@
 from django.db import models
-from django.contrib.auth.models import Permission, User
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.urls import reverse
-from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
-# Create your models here.
+#? using django-countries, we can add another field for countries(check documentation for extra ideas here:
+#? https://pypi.org/project/django-countries/#description)
+
+
+class CustomAccountManager(BaseUserManager):
+    def create_user(self, email, user_name, first_name, last_name, password, **other_fields):
+        if not email:
+            raise ValueError(_("You must provide a valid email address"))
+        email = self.normalize_email(email)
+        user = self.model(email=email, user_name=user_name, first_name=first_name, last_name=last_name, **other_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+
+    def create_superuser(self, email, user_name, first_name, last_name, password, **other_fields):
+        other_fields.setdefault('is_staff', True)
+        other_fields.setdefault('is_active', True)
+        other_fields.setdefault('is_superuser', True)
+        # Checking for wrong values
+        if other_fields.get('is_staff') is not True:
+            raise ValueError(_("Super User must be assigned to is_staff=True"))
+        if other_fields.get('is_superuser') is not True:
+            raise ValueError(_("Super User must be assigned to is_superuser=True"))
+        if other_fields.get('is_active') is not True:
+            raise ValueError(_("Super User must be assigned to is_active=True"))
+        return self.create_user(email, user_name, first_name, last_name, password, **other_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_("email address"), unique=True)
+    user_name = models.CharField(max_length=150, unique=True, help_text=_("Enter pseudonym"))
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    start_date = models.DateTimeField(default = timezone.now)
+    bio = models.TextField(_("Bio"), max_length=500, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default = True)
+
+    objects = CustomAccountManager()
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['user_name', 'first_name', 'last_name']
+
+    def __str__(self):
+        return self.user_name
+
+
+
 class Post(models.Model):
     STATUS_CHOICES = (
             ("draft", "Draft"),
@@ -27,12 +75,6 @@ class Post(models.Model):
 
     class Meta:
         ordering = ("-publish",)
-        # content_type = ContentType.objects.get_for_model('Post')
-        # permission = Permission.objects.create(
-        #     codename='can_publish',
-        #     name = 'Can Publish Posts',
-        #     content_type = content_type,
-        #)
 
     def __str__(self):
         return self.title
@@ -66,3 +108,4 @@ class Tag(models.Model):
     def __str__(self):
         """String for representing model tag/genre"""
         return self.name
+

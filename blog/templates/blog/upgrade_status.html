@@ -16,7 +16,15 @@
     <form action="" method="POST">
     {% csrf_token %}
     <h5> Enter the username you wish to have on display</h5>
-    {{form}}
+    <tr>
+        <td style="padding-right:5px">{{form.user_name.label_tag}}</td>
+        <td>{{form.user_name}}</td>
+    </tr>
+    <br>
+    <tr>
+        <td style="padding-right:5px">{{form.bio.label_tag}}</td>
+        <td>{{form.bio}}</td>
+    </tr>
     <br><br>
     <p>I confirm that I want to become a blogger.</p>
     <input class="btn btn-primary" type="submit" value="Confirm">

@@ -2,7 +2,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView,CreateView,DetailView
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import *
-from .forms import NewUserForm, UpgradeToBloggerForm
+from .forms import NewUserForm , UpgradeToBloggerForm
 from django.contrib import messages
 
 from django.contrib.auth import login, get_user_model
