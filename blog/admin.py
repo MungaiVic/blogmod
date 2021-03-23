@@ -4,7 +4,8 @@ from django.contrib.admin.decorators import register
 from django.contrib.auth.admin import UserAdmin
 from .models import *
 # Register your models here.
-# admin.site.register(Post)
+admin.site.site_title = "Blog"
+admin.site.site_header = "Blog Admin"
 admin.site.register(Comment)
 admin.site.register(Tag)
 
