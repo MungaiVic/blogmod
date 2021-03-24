@@ -1,9 +1,10 @@
 {% extends 'base_generic.html' %}
 {% block content %}
 <h1>{{post.title}}</h1>
-<h6>{{post.date_posted}}</h6>
-<h6><a href="">{{post.user}}</a></h6>
-<hr>
+<h6><strong>Post Date</strong>: {{post.date_posted}}</h6>
+<h6><strong>Author:</strong> <a href="{% url 'blogger-info' post.author.id%}">{{post.author}}</a></h6>
+<strong>Description:</strong>
+<br><br>
 <p>{{post.body}}</p>
 
 <div style="margin-top: 20px; margin-left: 20px;">

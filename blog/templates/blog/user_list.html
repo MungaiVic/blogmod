@@ -3,7 +3,7 @@
 <h3>Bloggers</h3>
     {% for bloggers in users %}
         <ul>
-            <li>{{bloggers}}</li>
+            <li><a href="{% url 'blogger-info' bloggers.id %}">{{bloggers}}</a></li>
         </ul>
     {% endfor %}
 {% endblock content %}

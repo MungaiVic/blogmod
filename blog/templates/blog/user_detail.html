@@ -1,0 +1,26 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+
+
+<div class="container">
+    <h1>Blogger: {{user.user_name}}</h1>
+
+    <h3>Bio</h3>
+    <p>{{user.bio}}</p>
+
+
+    <h2>Blogs list</h2>
+    <ul>
+        {% for blogposts in user.post_set.all %}
+            <li><a href="{% url 'blog-detail' blogposts.id %}">{{blogposts}}</a> ({{blogposts.date_posted}})</li>
+        {% endfor %}
+    </ul>
+
+
+
+
+</div>
+
+
+
+{% endblock content %}

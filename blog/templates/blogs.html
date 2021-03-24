@@ -1,0 +1,23 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+
+<h1>All blogs</h1>
+{% for blog in blogs %}
+<ul>
+    <li><a href="{% url 'blog-detail' blog.pk %}">{{blog.title}}</a> ({{blog.date_posted}}) - <a href="{% url 'blogger-info' blog.author.id%}">{{blog.author}}</a></li>
+</ul>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    {% for group in user.groups.all %}
+        {% if group.name == 'bloggers' %}
+            <a href="{% url 'create-blog' %}">New blog?</a>
+            {% elif group.name == 'viewers' %}
+            <p>To wirte a blog, upgrade your status <a href="{% url 'upgrade-status' %}">here</a></p>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>To write your new blog, <a href="{% url 'login' %}">login</a></p>
+{% endif %}
+
+{% endblock content %}

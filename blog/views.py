@@ -6,16 +6,20 @@ from .forms import NewUserForm , UpgradeToBloggerForm
 from django.contrib import messages
 
 from django.contrib.auth import login, get_user_model
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # Create your views here.
 def index(request):
+    return render(request, 'index.html')
+
+
+def blogs(request):
     blogs = Post.objects.all()
     context = {
         'blogs':blogs
     }
-    return render(request, 'index.html', context)
+    return render(request, 'blogs.html', context)
 
 def sign_up(request):
     if request.method == 'POST':
@@ -88,7 +92,6 @@ class CommentCreateView(LoginRequiredMixin,CreateView):
         return reverse('blog-detail',kwargs={'pk':self.kwargs['pk']})
 
 
-#TODO: Need to implement a list of bloggers
 def blogger_list(request):
     ourUser = get_user_model()
     users = ourUser.objects.filter(groups__name='bloggers')
@@ -98,10 +101,6 @@ def blogger_list(request):
 
 #TODO: Need to implement a list of every blogger's blogpost in MyblogListView
 #? Potential place to start placing analytics dashboard too
-def blogger_detail(request, pk):
-    # Here, I will pass the details of the blogger, all his/her blogposts. In the future, place some analytics
-    pass
-
 
 class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
@@ -125,3 +124,11 @@ class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 
+#TODO: Need to implement blogger detail view as well
+# It will have their personal details as well as the blog posts they've written with links to them...
+class BloggerDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    # template_name = '/blog/blogger_info.html'
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.kwargs['pk'])
