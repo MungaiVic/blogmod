@@ -124,11 +124,9 @@ class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 
-#TODO: Need to implement blogger detail view as well
 # It will have their personal details as well as the blog posts they've written with links to them...
 class BloggerDetailView(LoginRequiredMixin, DetailView):
     model = User
-    # template_name = '/blog/blogger_info.html'
 
     def get_queryset(self):
         return User.objects.filter(id=self.kwargs['pk'])
