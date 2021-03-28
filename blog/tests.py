@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from .models import *
+from .forms import NewUserForm, UpgradeToBloggerForm
 
 
 class UserAccountTests(TestCase):
@@ -109,8 +110,19 @@ class TagTest(TestCase):
 
 
 class FormTests(TestCase):
-    pass
+    upgrade_form = UpgradeToBloggerForm
 
+    def new_user_form_test(self):
+        newuser_form = NewUserForm
+        form = newuser_form(
+            first_name='first_name',last_name='last_name',user_name='username',email='testuser@user.com',
+            password1='password', password2='password'
+            )
+        self.assertEquals(newuser_form.password1,newuser_form.password2)
+        self.assertTrue(newuser_form.save())
 
 class ViewsTests(TestCase):
-    pass
+    def test_uses_correct_template(self):
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'index.html')

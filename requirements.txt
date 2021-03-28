@@ -1,5 +1,6 @@
 asgiref==3.3.1
 confusable-homoglyphs==3.2.0
+coverage==5.5
 Django==3.1.6
 django-admin-decorators==0.1
 django-registration==3.1.1
