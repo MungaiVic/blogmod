@@ -1,5 +1,9 @@
 /.vscode
-settings.py
 ./db.sqlite3
 /htmlcov
 .coverage
+# Text backup files
+*.bak
+
+# Database
+*.sqlite3
