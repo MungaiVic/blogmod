@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','q+ej2es)aee%e6va)4mnx$@)-s+9!(u
 # DEBUG = True
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['evening-thicket-12277.herokuapp.com']
 
 
 # Application definition
