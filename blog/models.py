@@ -64,7 +64,7 @@ class Post(models.Model):
     summary = models.TextField(max_length=500, help_text="Give a brief summary of what your post is about")
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, editable=False, on_delete=models.CASCADE)
-    body = models.TextField(editable=False)
+    body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
