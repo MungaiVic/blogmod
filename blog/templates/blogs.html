@@ -2,11 +2,18 @@
 {% block content %}
 
 <h1>All blogs</h1>
-{% for blog in blogs %}
-<ul>
-    <li><a href="{% url 'blog-detail' blog.pk %}">{{blog.title}}</a> ({{blog.date_posted}}) - <a href="{% url 'blogger-info' blog.author.id%}">{{blog.author}}</a></li>
-</ul>
-{% endfor %}
+
+    {% for blog in blogs %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'blog-detail' blog.pk %}">{{blog.title}}</a></h5>
+                ({{blog.date_posted}})
+                - <a href="{% url 'blogger-info' blog.author.id%}">{{blog.author}}</a>
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+
 
 {% if user.is_authenticated %}
     {% for group in user.groups.all %}
