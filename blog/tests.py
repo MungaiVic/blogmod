@@ -121,6 +121,8 @@ class FormTests(TestCase):
         self.assertEquals(newuser_form.password1,newuser_form.password2)
         self.assertTrue(newuser_form.save())
 
+
+
 class ViewsTests(TestCase):
     def test_uses_correct_template(self):
         response = self.client.get(reverse('home'))
